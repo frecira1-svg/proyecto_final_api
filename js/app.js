@@ -1,60 +1,66 @@
 const btn = document.getElementById("btnBuscar");
 const resultado = document.getElementById("resultado");
 
-// Buscar al hacer clic
-btn.addEventListener("click", async () => {
-  const texto = document.getElementById("busqueda").value;
+// FUNCIÓN PRINCIPAL (OBLIGATORIA)
+async function cargarDatos(nombre = "") {
 
-  resultado.innerHTML = "Cargando...";
+  resultado.innerHTML = "<p>Cargando...</p>";
 
   try {
-    const res = await fetch(`https://rickandmortyapi.com/api/character/?name=${texto}`);
-    const data = await res.json();
+    const response = await fetch(`https://rickandmortyapi.com/api/character/?name=${nombre}`);
+
+    // VALIDACIÓN (IMPORTANTE PARA NOTA)
+    if (!response.ok) {
+      throw new Error("No se encontraron resultados");
+    }
+
+    const data = await response.json();
 
     resultado.innerHTML = "";
 
-    data.results.forEach(personaje => {
-      const div = document.createElement("div");
-      div.classList.add("card");
+    // Mostrar al menos 6 personajes
+    data.results.slice(0, 6).forEach(personaje => {
 
-      div.innerHTML = `
-        <img src="${personaje.image}" width="100%">
-        <h3>${personaje.name}</h3>
-        <p>${personaje.status}</p>
-      `;
+  const card = document.createElement("div");
+  card.className = "card";
 
-      resultado.appendChild(div);
-    });
+  card.innerHTML = `
+    <img src="${personaje.image}">
+    <h3>${personaje.name}</h3>
+    <p>${personaje.status}</p>
+  `;
 
+  // 👉 FUNCIONALIDAD EXTRA (click)
+  card.addEventListener("click", () => {
+    alert(
+      `Nombre: ${personaje.name}\n` +
+      `Estado: ${personaje.status}\n` +
+      `Especie: ${personaje.species}\n` +
+      `Género: ${personaje.gender}`
+    );
+  });
+
+  resultado.appendChild(card);
+});
   } catch (error) {
-    resultado.innerHTML = "No se encontraron personajes ❌";
+    resultado.innerHTML = `<p>❌ ${error.message}</p>`;
   }
+}
+
+// EVENTO CLICK
+btn.addEventListener("click", () => {
+  const texto = document.getElementById("busqueda").value;
+  cargarDatos(texto);
 });
 
-// Buscar con Enter
-document.getElementById("busqueda").addEventListener("keypress", function(e) {
+// ENTER
+document.getElementById("busqueda").addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
     btn.click();
   }
 });
 
-// Cargar personajes al inicio
-window.onload = async () => {
-  const res = await fetch("https://rickandmortyapi.com/api/character");
-  const data = await res.json();
-
-  resultado.innerHTML = "";
-
-  data.results.forEach(personaje => {
-    const div = document.createElement("div");
-    div.classList.add("card");
-
-    div.innerHTML = `
-      <img src="${personaje.image}" width="100%">
-      <h3>${personaje.name}</h3>
-      <p>${personaje.status}</p>
-    `;
-
-    resultado.appendChild(div);
-  });
+// CARGA INICIAL
+window.onload = () => {
+  cargarDatos();
 };

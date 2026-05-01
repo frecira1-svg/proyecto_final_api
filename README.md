@@ -32,3 +32,13 @@ https://rickandmortyapi.com/
 ---
 
 ## 📁 Estructura del proyecto
+---
+
+## 💡 Recomendaciones aprendidas
+
+- Realizar commits frecuentes facilita el control de versiones
+- Usar la consola del navegador (F12) ayuda a detectar errores
+- Leer los mensajes de error permite solucionar problemas rápidamente
+- Pedir ayuda cuando es necesario mejora el aprendizaje
+- Entender el código es más importante que copiar y pegar
+- Documentar el proyecto con un buen README es fundamental
